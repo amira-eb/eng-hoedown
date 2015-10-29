@@ -55,23 +55,30 @@
 					</ul>
 						<img class="fragment fade-in" style="align: center;" src="http://media.giphy.com/media/hEMF9k5UHh2U0/giphy.gif"/>
 					<aside class="notes">
-						They have many different "contexts" where code and content are differentiated only by puncutation.
+						At the moment you may feel like this, by the end of the presentation you may feel more like...
 					</aside>
 				</section>
 
 				<section>
-					<h2>Securely? Why?</h2>
-					<ul>
-						<p class="fragment fade-in">"Browsers are extremely finicky beasts." - pmp</p>
-					</ul>
-						<img class="fragment fade-in" style="align: center;" src="http://media.giphy.com/media/hEMF9k5UHh2U0/giphy.gif"/>
+						<img style="align: center;" src="https://40.media.tumblr.com/bc1de1db2e12d80cbb66b1ab41052340/tumblr_nwz96oZ3Pz1qewh5to1_500.jpg"/>
 					<aside class="notes">
-						They have many different "contexts" where code and content are differentiated only by puncutation.
+						this.
+					</aside>
+				</section>
+
+				<section>
+					<h2>Disclaimer</h2>
+					<ul>
+						<p class="fragment fade-in">insert image/note here related to this being a smorgasboard of various things and that I am not an expert</p>
+					</ul>
+
+					<aside class="notes">
+						There is a LOT more to know when it comes to security than what I will be covering. This is called a cocktail approach as I'll be covering a little bit of a, b,and c, and x, y, and z, but hopefully the most important things you need to know when it comes to escaping JSON and User generated content within your templates.
 					</aside>
 				</section>
 
 				<section style="text-align: left;">
-					<h2 style="text-align: center;">Browser Contexts</h2>
+					<h2 style="text-align: center;">Different Browser Contexts</h2>
 					<li class="fragment fade-in">HTML Body -- <code>&lt;body&gt;${ text }&lt;/body&gt;</code></li>
 					<li class="fragment fade-in">Element Attribute -- <code>&lt;a href="${ link }"&gt;My Site&lt;/a&gt;</code></li>
 					<li class="fragment fade-in">JS String Literal -- <code>&lt;script&gt;var x='${foo}' &gt;/script&gt;</code></li>
@@ -82,6 +89,7 @@
 					<p>
 					<aside class="notes">
 						So, it's really important that engineers understand the context of where their untrusted data is being added to the template when thinking about the encoding.
+						Keep these things in mind as I continue this presentation.
 					</aside>
 					</p>
 				</section>
@@ -95,7 +103,7 @@
 						  	var x = '${ foo | n };'
 						  < /script >
 
-						  foo = "&#39;; alert(document.cookie);"
+						  foo = "&#39;; alert(document.cookie);'"
 						```
 						<li style="text-align: left;" class="fragment fade-in">Why is this vulnerable?</li>
 						<li style="text-align: left;" class="fragment fade-in">JavaScript on the client side will first decode the HTML entities, leaving:
@@ -103,55 +111,41 @@
 						```
 						  var x = " ;alert(document.cookie);"
 						```
-					</script>
-					<aside class="notes">
-						This is assuming I override the other j# variables. Otherwise we will get another error.
-					</aside>
-				</section>
-
-				<section data-markdown>
-					<script type="text/template">
-						<h2>Never Trust Your Inputs (make slide more creative)</h2>
-						<ul>
-							<li>This is very important when it comes to templates and escaping, because we accept a lot of user-generated content and inputs, store them in our database, and then use those inputs in the formulation of the response bodies back to the clients</li>
-							<li>You can have a variety of injection attacks such as XSS, SQLi, Command Injection, XXE and others, but I won't go into those here</li>
-							<li>Furthermore, you can have non functional ugly sites that break what the product requirements are (like being able to click register)</li>
-						</ul>
-					</script>
-				</section>
-
-				<section data-markdown>
-					<script type="text/template">
-						<h2>The Cocktail Part</h2>
-						<ul>
-							<li><code>| n </code></li>
-							<li><code>safejson</code></li>
-							<li><code>escapejs</code></li>
-							<li><code>mark_safe</code></li>
-							<li><code>mark_safe</code></li>
-							<li><code>strip_html</code></li>
-							<li><code>clean_html</code></li>
-						</ul>
+						<p>
 						<aside class="notes">
-							Sometimes you can't find your work, and that's because it isn't in a g-cell and has font size 0.
+							First I'm going to jump right into showing an example of why we do this, which is to prevent site vulnerabilities.
+							<br>This is assuming I override the other j# variables. Otherwise we will get another error.
+						</aside>
+						</p>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>Never Trust Your Inputs!</h2>
+						<img style="width:49%; float:left; margin-right:5px; margin-top:10%;" src="https://41.media.tumblr.com/cd5529211441b18a9342a266a0a7e2c9/tumblr_nwzbz9f9aV1qewh5to1_1280.png">
+						<img style="width:49%; float:left;" src="https://40.media.tumblr.com/171de5eaf966937a0027cefee1a0cd68/tumblr_nwzc4mBDR31qewh5to1_1280.png">
+						<aside class="notes">
+							<liL>Never trust your inputs, just like you should never trust a friend when they tell you a drink is weak and has like one shot in it. Don't just assume it's good for you, and vet the contents first.</liL>
+							<li>This is very important when it comes to templates and escaping, because we accept a lot of user-generated content and inputs, store them in our database, and then use those inputs in the formulation of the response bodies back to the clients</li>
+							<li>You can have a variety of injection attacks such as XSS, SQLi, Command Injection, XXE and others, things I won't go into here</li>
+							<li>Furthermore, you can have non functional ugly sites that break what the product requirements are (like being able to click register)</li>
 						</aside>
 					</script>
 				</section>
 
+				<section>
+					<h2>How?</h2>
+					<img style="align: center;" src="https://40.media.tumblr.com/e6cba5c78a42cb7a1c8731a8a7e9f7a1/tumblr_nwzjoaT61t1qewh5to1_1280.png"/>
+					<aside class="notes">
+						This is the cocktail part of the talk where I will talk about the various methods of escaping and stripping, and when you should probably use them.
+					</aside>
+				</section>
+
+
 				<section data-markdown>
 					<script type="text/template">
-						<h2>Million Dollar Question: What is clean_html vs. safe_html></h2>
-						<ul>
-							<li>clean_html</li>
-							<li>.g-cell-4-12 (quarters); g-cell-6-12 (halves)</li>
-							<li>You want your g-cells to add up to the number of columns, or will have spacing issues</li>
-						</ul>
-						```
-							<div class="g-cell g-cell-5-9">Div 1</div>
-							<div class="g-cell g-cell-5-9">Div 2</div>
-							<div class="g-cell g-cell-9-9">Div 3</div>
-						```
-						<img style="height:60%; width:60%" src="https://41.media.tumblr.com/55411f1a14b970f567b46dcdfd82d5c0/tumblr_nq7h6938M01qewh5to1_1280.png"/>
+						<h2>clean_html, strip_html, strip_tags</h2>
 						<aside class="notes">
 							This is a common question - what are these doing and when do we use them?
 						</aside>
@@ -160,95 +154,158 @@
 
 				<section data-markdown>
 					<script type="text/template">
-						<h2>g-cells variants</h2>
-						```
-						<div class="g-group">
-							<div class="g-cell g-cell-4-9">Div 1</div>
-							<div class="g-cell g-cell-5-9">Div 2</div>
-							<div class="g-cell g-cell-9-9">Div 3</div>
-						</div>
-						```
-						<img style="height:60%; width:60%" src="https://36.media.tumblr.com/3982cfc2c75c40ed0c8b66d5722de246/tumblr_nq7h022Z111qewh5to1_1280.png"/>
-					</script>
-				</section>
-
-				<section data-markdown>
-					<script type="text/template">
-						<h2>g-vertical groups</h2>
-						<ul>
-							<li>Essentially acting as both a g-cell and g-group</li>
-							<li>Allows us to have columns</li>
-							<li>No gutters (i.e. padding)</li>
-						</ul>
-						```
-						.g-vertical-group {
-						    @extend %g-element;
-						    @extend .g-group;
-
-						    padding: 0;
-						}
-						```
+						<h2>clean_html is like [alcohol analogy?]</h2>
+						<li>Takes HTML, removes < script > tags and other attack vendors
+						<li>Closes un-closed HTML tags</li>
+						<li>Use this when you want to take the HTML data provided by the user, and display it on the page
 						<aside class="notes">
-							Lately a lot of people have been using g-cell-no-gutters when really they should be using the vertical groups.
+							DEMO in the app. However, clean_html is not performant. If you have an explicit whitelist of tags...
 						</aside>
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						<h2>g-vertical groups</h2>
-						<ul>
-							<li>There should be as little nesting of g-cells as possible, except within a vertical group</li>
-						</ul>
-						<img src="https://40.media.tumblr.com/28b503780d83d08ecadc9037b25bf029/tumblr_nq7iutngyT1qewh5to1_1280.png" />
+						<h2>strip_html</h2>
+						<li>Now uses <a href="http://bleach.readthedocs.org/en/latest/clean.html">bleach</a>, which is more performant
+						<li>Pass in a 'whitelist' of tags</li>
+						<li>All HTML is stripped but those tags</li>
+						<li>Use strip_html instead of clean_html when you want no HTML tags, or just a few
+						<li>I don't actually understand strip tags vs strip html, Paul?
+						<aside class="notes">
+							However, clean_html is not performant. If you have an explicit whitelist of tags...
+						</aside>
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						<h2>Grid Offsets</h2>
-						<ul>
-							<li>Basically offsetting grids by creating an empty grid</li>
-							<li>.g-offset-3-12 - offset the cell by 3/12</li>
-							<li>.g-offset-lg-4-12 - offset the cell by 4/12 on large screens</li>
-						</ul>
-						<img src="https://36.media.tumblr.com/ab3a0b2f90e07f2e33b7e45688c50ff7/tumblr_nq7izvhovf1qewh5to1_1280.png"/>
-					</script>
-				</section>
-
-
-
-				<section data-markdown>
-					<script type="text/template">
-						<h2>Responsive Grid</h2>
-						<ul>
-							<li>Three sizes: small, medium, large</li>
-							<li>Add responsive classes to the grid to have a different number of columns in small, medium, and large screens</li>
-						</ul>
-						```
-						.g-cell-X-Y
-						.g-cell-md-X-Y
-						.g-cell-lg-X-Y
-						```
+						<h2>as_safe_markup</h2>
+						<p>paul can we chat on what I should say on this? is it preferred to strip html and clean html? seems way better to me</p>
 					</script>
 				</section>
 
 				<section data-markdown>
 					<script type="text/template">
-						<h2>Other things?</h2>
-						<ul>
-							<li>Gutters (padding)</li>
-							<li>Breakpoints</li>
-							<li>Show/hide based on size</li>
-						</ul>
+						<h2>escape_js, django.utils.html.escape</h2>
 					</script>
 				</section>
 
-				<section style="text-align: left;">
-					<h1>THE END</h1>
-					<p>
-						Questions?
-					</p>
+				<section data-markdown>
+					<script type="text/template">
+						<h2>Django 'escape' - Escapes a String's HTML</h2>
+						<ul>
+						<li class="fragment fade-in">< is converted to & lt;</li>
+						<li class="fragment fade-in"> is converted to & gt;</li>
+						<li class="fragment fade-in">' (single quote) is converted to & #39;</li>
+						<li class="fragment fade-in">" (double quote) is converted to & quot;</li>
+						<li class="fragment fade-in">& is converted to & amp;</li>
+						<li class="fragment fade-in"> Does NOT get called if the string has already been "marked safe"</li>
+						</ul>
+						<aside class="notes">
+							More on mark safe later (what should I say about when this should be used?)
+						</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>escapejs</h2>
+						<ul>
+						<li class="fragment fade-in">Escapes characters for use in JavaScript strings</li>
+						<li class="fragment fade-in"><code>testing\r\njavascript \'string" &lt;b&gt;escaping</b></code></li>
+						</ul>
+						<aside class="notes">
+							This does not make the string safe for use in HTML, but does protect you from syntax errors when using templates to generate JavaScript/JSON.
+						</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>escapejs is great, but safejson is better</h2>
+						<ul>
+						<li class="fragment fade-in">Outputs a Python data structure as JSON</li>
+						<li class="fragment fade-in">Can pass in strings or more complex structures, and less likely to miss cases</li>
+						<li class="fragment fade-in"><a href="https://phabricator.evbhome.com/D6955">Example</a></li>
+						</ul>
+						<aside class="notes">
+							Like escapejs, this ensures that dangerous sequences are correctly escaped for use within a script block without opening a potential XSS hole.
+						</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>| n</h2>
+						<ul>
+						<p>From what I can tell, we should try to not use this. It basically tells us that this string is 'safe' so we do not double encode it, but that is dangerous in case i t is actually not safe. But we need it for translations...?
+						</ul>
+						<aside class="notes">
+						</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>| h</h2>
+						<ul>
+						<p>Unclear on what this does and if I should cover it.</p>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>Past relevant security issues and their fixes</h2>
+						<ul>
+						<p>If I have time I may go over a couple of these such as https://jira.evbhome.com/browse/EB-18312 which is fixed by checking if is_url.</p>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>So far, we reviewed...</h2>
+						<ul>
+							<li><code>strip_html</code></li>
+							<li><code>clean_html</code></li>
+							<li><code>| n </code></li>
+							<li><code>| h </code></li>
+							<li><code>safejson</code></li>
+							<li><code>escapejs</code></li>
+							<li><code>mark_safe</code></li>
+							<li><code>as_safe_markup</code></li>
+						</ul>
+						<aside class="notes">
+						</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<img src="https://38.media.tumblr.com/f576b011ae3c3b42323f5bcce8ac03fc/tumblr_inline_n9r1mnyYt61s89bo6.gif"/>
+						<p class="fragment fade-in">Yes and no. There are a lot of different things I could've chosen to talk about, and many other edge cases and scenarios I didn't consider.
+						But for now....</p>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<img src="http://media.giphy.com/media/uddDNZtt72kBW/giphy.gif">
+						<aside>Have fun safely and securely embedding user generated content / json!</aside>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h1>Questions?</h1>
+						<p class="fragment fade-in">Thank you to Paul, Tamara, Simon, and Darren for your knowledge and help! (I owe you all a drink.)</p>
+					</script>
 				</section>
 
 			</div>
