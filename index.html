@@ -80,7 +80,8 @@
 				<section style="text-align: left;">
 					<h2 style="text-align: center;">Different Browser Contexts</h2>
 					<li class="fragment fade-in">HTML Body -- <code>&lt;body&gt;${ text }&lt;/body&gt;</code></li>
-					<li class="fragment fade-in">Element Attribute -- <code>&lt;a href="${ link }"&gt;My Site&lt;/a&gt;</code></li>
+					<li class="fragment fade-in">Element Attribute -- <code>&lt;a href="" onclick="{...}"/&gt;</code></li>
+					<li class="fragment fade-in">Links With JS -- <code>&lt;a href="javascript:alert(1)"&gt;</code></li>
 					<li class="fragment fade-in">JS String Literal -- <code>&lt;script&gt;var x='${foo}' &gt;/script&gt;</code></li>
 					<li class="fragment fade-in">JSON Body Responses</li>
 					<li class="fragment fade-in">E-mail addresses</li>
@@ -115,6 +116,38 @@
 						<aside class="notes">
 							First I'm going to jump right into showing an example of why we do this, which is to prevent site vulnerabilities.
 							<br>This is assuming I override the other j# variables. Otherwise we will get another error.
+						</aside>
+						</p>
+					</script>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+						<h2>A Common XSS Issue at EB</h2>
+						<li style="text-align: left;">Default encoder for core v. django templates is DIFFERENT.</li>
+						<li style="text-align: left;">In core, default encoder for template variables is raw.</li>
+						<li style="text-align: left;">In Django, default encoder is HTML entity encode, or | h</li>
+
+						```
+						  from ebapps.organizers.models import Organizer
+							...
+							org_desc = organizer.description  ## the raw database field
+							p.setValue("org_desc", org_desc)
+							p.display()
+						```
+						<li style="text-align: left;">Then in the core template:</li>
+						```
+							<h2>${ org_desc }</h2>
+						```
+						<p>
+						<aside class="notes">
+							Take this piece of code for example.
+							<br><br>
+							"raw" meaning the template expects that either the data is already sanitized and safe for output,
+							or another filter is applied in the template directly ( |h, |escapejs, etc.)
+							<br><br>
+							For Django views, so if you pass in some raw untreated html, you will likely get something safe to render.
+							This bites us when, in a core template, we think it should work like django but it doesn't.
 						</aside>
 						</p>
 					</script>
